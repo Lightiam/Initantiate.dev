@@ -77,8 +77,9 @@ export const validateAndDeployInfrastructure = async ({ infrastructureId }, cont
       }
     });
     
-    process.env.PULUMI_ACCESS_TOKEN = process.env.PULUMI_ACCESS_TOKEN || 
-                                     "pul-12c056b7af91a9892ba74be9cc3c0418b09f3929";
+    if (!process.env.PULUMI_ACCESS_TOKEN) {
+      console.warn("PULUMI_ACCESS_TOKEN environment variable is not set");
+    }
     
     // Deploy the stack
     const result = await stack.up({

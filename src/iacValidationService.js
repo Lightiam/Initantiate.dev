@@ -40,8 +40,7 @@ description: Temporary project for validating infrastructure code
       cwd: tempDir,
       env: {
         ...process.env,
-        PULUMI_SKIP_UPDATE_CHECK: "true",
-        PULUMI_ACCESS_TOKEN: process.env.PULUMI_ACCESS_TOKEN || "pul-12c056b7af91a9892ba74be9cc3c0418b09f3929"
+        PULUMI_SKIP_UPDATE_CHECK: "true"
       }
     });
     
