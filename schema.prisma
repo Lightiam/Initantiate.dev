@@ -1,0 +1,25 @@
+datasource db {
+  provider = "sqlite"
+  // Wasp requires that the url is set to the DATABASE_URL environment variable.
+  url      = env("DATABASE_URL")
+}
+
+// Wasp requires the `prisma-client-js` generator to be present.
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+    id              Int              @id @default(autoincrement())
+    infrastructures Infrastructure[]
+}
+
+model Infrastructure {
+    id                Int     @id @default(autoincrement())
+    user              User    @relation(fields: [userId], references: [id])
+    userId            Int
+    description       String
+    code              String
+    status            String
+    deploymentDetails String?  // JSON string containing deployment results or error details
+}
