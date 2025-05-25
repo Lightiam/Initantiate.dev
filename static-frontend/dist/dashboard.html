@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instanti8.&lt;dev&gt; - Dashboard</title>
+    <!-- Add highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        // Initialize highlight.js when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof hljs !== 'undefined') {
+                hljs.highlightAll();
+            }
+        });
+    </script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4F46E5, #06B6D4);
+            --secondary-gradient: linear-gradient(135deg, #3B82F6, #10B981);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: #0F172A;
+            color: #F8FAFC;
+            line-height: 1.6;
+            background-image: url('grid-pattern.svg');
+            background-size: 100px 100px;
+            background-repeat: repeat;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        header {
+            padding: 1.5rem 0;
+            background-color: #1E293B;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .user-menu a {
+            color: #94A3B8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .user-menu a:hover {
+            color: #F8FAFC;
+        }
+        
+        .user-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: var(--secondary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 73px);
+        }
+        
+        .sidebar {
+            background-color: #1E293B;
+            border-right: 1px solid #334155;
+            padding: 2rem 0;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #94A3B8;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-menu a.active {
+            background-color: #334155;
+            color: #F8FAFC;
+            border-left-color: #4F46E5;
+        }
+        
+        .sidebar-menu a:hover:not(.active) {
+            background-color: #263449;
+            color: #F8FAFC;
+        }
+        
+        .main-content {
+            padding: 2rem;
+        }
+        
+        .page-title {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .stat-card {
+            background-color: #1E293B;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.875rem;
+            color: #94A3B8;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+        
+        .card {
+            background-color: #1E293B;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            background: var(--primary-gradient);
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+        }
+        
+        .infra-list {
+            list-style: none;
+        }
+        
+        .infra-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .infra-item:last-child {
+            border-bottom: none;
+        }
+        
+        .infra-details h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .infra-details p {
+            font-size: 0.875rem;
+            color: #94A3B8;
+        }
+        
+        .infra-status {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+        
+        .status-deployed {
+            background-color: #065F46;
+            color: #D1FAE5;
+        }
+        
+        .status-generated {
+            background-color: #1E40AF;
+            color: #DBEAFE;
+        }
+        
+        .status-failed {
+            background-color: #991B1B;
+            color: #FEE2E2;
+        }
+        
+        .create-form {
+            margin-top: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+            background-color: #0F172A;
+            color: #F8FAFC;
+            font-size: 1rem;
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        
+        .code-preview {
+            background-color: #0F172A;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            color: #94A3B8;
+        }
+        
+        .code-preview .highlight {
+            color: #4F46E5;
+        }
+        
+        .code-preview .comment {
+            color: #64748B;
+        }
+        
+        .code-preview .string {
+            color: #10B981;
+        }
+        
+        .code-preview .keyword {
+            color: #EC4899;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Instanti8.&lt;dev&gt;</div>
+                <div class="user-menu">
+                    <a href="#">Documentation</a>
+                    <a href="#">Settings</a>
+                    <div class="user-avatar">D</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="dashboard">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active">Dashboard</a></li>
+                <li><a href="#">Infrastructure</a></li>
+                <li><a href="#">Deployments</a></li>
+                <li><a href="#">Templates</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="index.html">Logout</a></li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <h1 class="page-title">Dashboard</h1>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Resources</h3>
+                    <div class="value">24</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Deployments</h3>
+                    <div class="value">3</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Cloud Providers</h3>
+                    <div class="value">3</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Monthly Cost</h3>
+                    <div class="value">$142.50</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent Infrastructure</h2>
+                    <button class="button">Create New</button>
+                </div>
+                
+                <ul class="infra-list">
+                    <li class="infra-item">
+                        <div class="infra-details">
+                            <h4>Multi-region Web Application</h4>
+                            <p>Created 2 days ago • AWS, Azure</p>
+                        </div>
+                        <span class="infra-status status-deployed">Deployed</span>
+                    </li>
+                    <li class="infra-item">
+                        <div class="infra-details">
+                            <h4>Data Processing Pipeline</h4>
+                            <p>Created 3 days ago • GCP</p>
+                        </div>
+                        <span class="infra-status status-deployed">Deployed</span>
+                    </li>
+                    <li class="infra-item">
+                        <div class="infra-details">
+                            <h4>Serverless API Backend</h4>
+                            <p>Created 1 week ago • AWS</p>
+                        </div>
+                        <span class="infra-status status-generated">Generated</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Create New Infrastructure</h2>
+                </div>
+                
+                <div class="create-form">
+                    <div class="form-group">
+                        <label for="infra-prompt">Describe your infrastructure needs</label>
+                        <textarea id="infra-prompt" placeholder="Example: Create a highly available web application with load balancing across AWS and Azure, with a PostgreSQL database and Redis cache."></textarea>
+                    </div>
+                    
+                    <button class="button" id="generate-btn">Generate Infrastructure</button>
+                    
+                    <div id="code-output" style="display: none; margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Generated Pulumi Code</h3>
+                        <div class="code-preview" id="code-content">
+                            <span class="comment">// Azure Virtual Network Configuration</span>
+                            <span class="keyword">import</span> * <span class="keyword">as</span> pulumi <span class="keyword">from</span> "@pulumi/pulumi";
+                            <span class="keyword">import</span> * <span class="keyword">as</span> azure <span class="keyword">from</span> "@pulumi/azure-native";
+                            <span class="keyword">import</span> * <span class="keyword">as</span> network <span class="keyword">from</span> "@pulumi/azure-native/network";
+                            
+                            <span class="comment">// Create a resource group</span>
+                            <span class="keyword">const</span> resourceGroup = <span class="keyword">new</span> azure.resources.ResourceGroup(<span class="string">"azure-vpc-rg"</span>);
+                            
+                            <span class="comment">// Create a virtual network (VPC equivalent in Azure)</span>
+                            <span class="keyword">const</span> virtualNetwork = <span class="keyword">new</span> network.VirtualNetwork(<span class="string">"azure-vnet"</span>, {
+                                resourceGroupName: resourceGroup.name,
+                                addressSpace: {
+                                    addressPrefixes: [<span class="string">"10.0.0.0/16"</span>],
+                                },
+                                subnets: [
+                                    {
+                                        name: <span class="string">"frontend-subnet"</span>,
+                                        addressPrefix: <span class="string">"10.0.1.0/24"</span>,
+                                    },
+                                    {
+                                        name: <span class="string">"backend-subnet"</span>,
+                                        addressPrefix: <span class="string">"10.0.2.0/24"</span>,
+                                    },
+                                    {
+                                        name: <span class="string">"database-subnet"</span>,
+                                        addressPrefix: <span class="string">"10.0.3.0/24"</span>,
+                                    },
+                                ],
+                            });
+                            
+                            <span class="comment">// Create a network security group</span>
+                            <span class="keyword">const</span> nsg = <span class="keyword">new</span> network.NetworkSecurityGroup(<span class="string">"azure-nsg"</span>, {
+                                resourceGroupName: resourceGroup.name,
+                                securityRules: [
+                                    {
+                                        name: <span class="string">"allow-http"</span>,
+                                        priority: 100,
+                                        direction: <span class="string">"Inbound"</span>,
+                                        access: <span class="string">"Allow"</span>,
+                                        protocol: <span class="string">"Tcp"</span>,
+                                        sourceAddressPrefix: <span class="string">"*"</span>,
+                                        sourcePortRange: <span class="string">"*"</span>,
+                                        destinationAddressPrefix: <span class="string">"*"</span>,
+                                        destinationPortRange: <span class="string">"80"</span>,
+                                    },
+                                    {
+                                        name: <span class="string">"allow-https"</span>,
+                                        priority: 110,
+                                        direction: <span class="string">"Inbound"</span>,
+                                        access: <span class="string">"Allow"</span>,
+                                        protocol: <span class="string">"Tcp"</span>,
+                                        sourceAddressPrefix: <span class="string">"*"</span>,
+                                        sourcePortRange: <span class="string">"*"</span>,
+                                        destinationAddressPrefix: <span class="string">"*"</span>,
+                                        destinationPortRange: <span class="string">"443"</span>,
+                                    },
+                                ],
+                            });
+                            
+                            <span class="keyword">export</span> <span class="keyword">const</span> vnetName = virtualNetwork.name;
+                            <span class="keyword">export</span> <span class="keyword">const</span> vnetId = virtualNetwork.id;
+                            <span class="keyword">export</span> <span class="keyword">const</span> resourceGroupName = resourceGroup.name;
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            <button class="button" id="deploy-btn">Deploy Infrastructure</button>
+                            <button class="button" id="edit-btn" style="background: #334155;">Edit Code</button>
+                            <button class="button" id="copy-btn" style="background: #334155;">Copy Code</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Utility functions for detecting cloud provider and infrastructure type from code
+        function detectCloudProvider(code) {
+            const codeLower = code.toLowerCase();
+            if (codeLower.includes("aws") || codeLower.includes("amazon")) {
+                return "AWS";
+            } else if (codeLower.includes("azure") || codeLower.includes("microsoft")) {
+                return "Azure";
+            } else if (codeLower.includes("gcp") || codeLower.includes("google") || codeLower.includes("container.cluster")) {
+                return "GCP";
+            } else {
+                return "Multi-cloud";
+            }
+        }
+        
+        function detectInfraType(code) {
+            const codeLower = code.toLowerCase();
+            if (codeLower.includes("kubernetes") || codeLower.includes("k8s") || codeLower.includes("container.cluster")) {
+                return "Kubernetes";
+            } else if (codeLower.includes("serverless") || codeLower.includes("lambda") || codeLower.includes("function")) {
+                return "Serverless";
+            } else if (codeLower.includes("vpc") || codeLower.includes("vnet") || codeLower.includes("network")) {
+                return "Network";
+            } else {
+                return "Infrastructure";
+            }
+        }
+        
+        // Utility functions for detecting cloud provider and infrastructure type from prompt
+        function detectCloudProviderFromPrompt(prompt) {
+            const promptLower = prompt.toLowerCase();
+            if (promptLower.includes("aws") || promptLower.includes("amazon")) {
+                return "AWS";
+            } else if (promptLower.includes("azure") || promptLower.includes("microsoft")) {
+                return "Azure";
+            } else if (promptLower.includes("gcp") || promptLower.includes("google")) {
+                return "GCP";
+            } else {
+                return "Multi-cloud";
+            }
+        }
+        
+        function detectInfraTypeFromPrompt(prompt) {
+            const promptLower = prompt.toLowerCase();
+            if (promptLower.includes("kubernetes") || promptLower.includes("k8s")) {
+                return "Kubernetes";
+            } else if (promptLower.includes("serverless") || promptLower.includes("lambda") || promptLower.includes("function")) {
+                return "Serverless";
+            } else if (promptLower.includes("vpc") || promptLower.includes("vnet") || promptLower.includes("network")) {
+                return "VPC";
+            } else {
+                return "App";
+            }
+        }
+        
+        // Initialize global variables for generated code metadata
+        window.generatedCloudProvider = null;
+        window.generatedInfraType = null;
+        
+        // Add ID to the Create New button
+        document.querySelector('.card-header .button').id = 'create-new-btn';
+        
+        // Add event listener to Create New button
+        document.getElementById('create-new-btn').addEventListener('click', function() {
+            // Scroll to the Create New Infrastructure section
+            document.querySelector('.card-header .card-title').scrollIntoView({ behavior: 'smooth' });
+            
+            // Focus on the textarea
+            setTimeout(() => {
+                document.getElementById('infra-prompt').focus();
+            }, 500);
+        });
+        
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            // Get the user's prompt
+            const prompt = document.getElementById('infra-prompt').value.trim();
+            
+            console.log('Generate button clicked with prompt:', prompt);
+            
+            if (!prompt) {
+                alert('Please describe your infrastructure needs.');
+                return;
+            }
+            
+            // Show loading state
+            const generateBtn = this;
+            const originalText = generateBtn.textContent;
+            generateBtn.textContent = 'Generating...';
+            generateBtn.disabled = true;
+            
+            // Show code output container with loading indicator
+            document.getElementById('code-output').style.display = 'block';
+            const codeContent = document.getElementById('code-content');
+            codeContent.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>Generating code with AI...</p><p style="margin-top: 1rem; font-size: 0.875rem; color: #94A3B8;">This may take a few seconds</p></div>';
+            
+            console.log('Detecting cloud provider from prompt:', prompt);
+            const cloudProvider = detectCloudProviderFromPrompt(prompt);
+            const infraType = detectInfraTypeFromPrompt(prompt);
+            console.log('Detected cloud provider:', cloudProvider, 'and infra type:', infraType);
+            
+            // Scroll to the code output
+            document.getElementById('code-output').scrollIntoView({ behavior: 'smooth' });
+            
+            // Call the LLM API to generate infrastructure code
+            console.log('Sending request to API with prompt:', prompt);
+            
+            // Set up API call with timeout
+            const apiUrl = 'https://instantiate-backend-txxzhbkj.fly.dev/api/generate-infrastructure';
+            console.log('Using API URL:', apiUrl);
+            
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => {
+                console.log('API call timed out, aborting');
+                controller.abort();
+            }, 30000); // 30 second timeout
+            
+            console.log('Making fetch request to API');
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ prompt: prompt }),
+                signal: controller.signal
+            })
+            .then(response => {
+                clearTimeout(timeoutId);
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('API response:', data);
+                
+                // Store the cloud provider and infra type
+                window.generatedCloudProvider = data.cloudProvider || cloudProvider;
+                window.generatedInfraType = data.infraType || infraType;
+                
+                // Format and display the code
+                const formattedCode = formatCodeWithSyntaxHighlighting(data.code);
+                codeContent.innerHTML = formattedCode;
+                
+                // Reset the generate button
+                generateBtn.textContent = originalText;
+                generateBtn.disabled = false;
+                
+                // Show the deploy, edit, and copy buttons
+                document.getElementById('deploy-btn').style.display = 'inline-block';
+                document.getElementById('edit-btn').style.display = 'inline-block';
+                document.getElementById('copy-btn').style.display = 'inline-block';
+            })
+            .catch(error => {
+                console.error('Error generating infrastructure code:', error);
+                
+                // Use fallback code generation based on detected cloud provider and infra type
+                let code = '';
+                
+                if (cloudProvider === 'GCP' && infraType === 'Kubernetes') {
+                    code = generateGCPKubernetesCode();
+                } else if (cloudProvider === 'AWS' && infraType === 'Kubernetes') {
+                    code = generateAWSKubernetesCode();
+                } else if (cloudProvider === 'Azure' && infraType === 'Kubernetes') {
+                    code = generateAzureKubernetesCode();
+                } else if (cloudProvider === 'GCP' && infraType === 'VPC') {
+                    code = generateGCPVPCCode();
+                } else if (cloudProvider === 'AWS' && infraType === 'VPC') {
+                    code = generateAWSVPCCode();
+                } else if (cloudProvider === 'Azure' && infraType === 'VPC') {
+                    code = generateAzureVPCCode();
+                } else {
+                    // Default to AWS VPC if no specific match
+                    code = generateAWSVPCCode();
+                }
+                
+                // Store the cloud provider and infra type
+                window.generatedCloudProvider = cloudProvider;
+                window.generatedInfraType = infraType;
+                
+                // Format and display the code
+                const formattedCode = formatCodeWithSyntaxHighlighting(code);
+                codeContent.innerHTML = formattedCode;
+                
+                // Reset the generate button
+                generateBtn.textContent = originalText;
+                generateBtn.disabled = false;
+                
+                // Show the deploy, edit, and copy buttons
+                document.getElementById('deploy-btn').style.display = 'inline-block';
+                document.getElementById('edit-btn').style.display = 'inline-block';
+                document.getElementById('copy-btn').style.display = 'inline-block';
+            });
+            
+            // Function to detect cloud provider from prompt
+            function detectCloudProviderFromPrompt(prompt) {
+                prompt = prompt.toLowerCase();
+                if (prompt.includes('aws') || prompt.includes('amazon')) {
+                    return 'AWS';
+                } else if (prompt.includes('azure') || prompt.includes('microsoft')) {
+                    return 'Azure';
+                } else if (prompt.includes('gcp') || prompt.includes('google')) {
+                    return 'GCP';
+                }
+                return 'AWS'; // Default to AWS if no provider specified
+            }
+            
+            // Function to detect infrastructure type from prompt
+            function detectInfraTypeFromPrompt(prompt) {
+                prompt = prompt.toLowerCase();
+                if (prompt.includes('kubernetes') || prompt.includes('k8s')) {
+                    return 'Kubernetes';
+                } else if (prompt.includes('vpc') || prompt.includes('network')) {
+                    return 'VPC';
+                } else if (prompt.includes('serverless') || prompt.includes('lambda') || prompt.includes('function')) {
+                    return 'Serverless';
+                } else if (prompt.includes('database') || prompt.includes('sql') || prompt.includes('nosql')) {
+                    return 'Database';
+                } else if (prompt.includes('storage') || prompt.includes('bucket')) {
+                    return 'Storage';
+                }
+                return 'App'; // Default to App if no type specified
+            }
+            
+            // Function to format code with syntax highlighting
+            function formatCodeWithSyntaxHighlighting(code) {
+                return code
+                    .replace(/\/\/.*/g, match => `<span class="comment">${match}</span>`)
+                    .replace(/\b(import|export|const|new|as|from|function|return|if|else|for|while)\b/g, match => `<span class="keyword">${match}</span>`)
+                    .replace(/\b(true|false|null|undefined)\b/g, match => `<span class="keyword">${match}</span>`)
+                    .replace(/"[^"]*"/g, match => `<span class="string">${match}</span>`)
+                    .replace(/'[^']*'/g, match => `<span class="string">${match}</span>`)
+                    .replace(/`[^`]*`/g, match => `<span class="string">${match}</span>`);
+            }
+            
+            // Generate GCP Kubernetes code
+            function generateGCPKubernetesCode() {
+                return `// GCP Kubernetes Cluster with a Simple Application
+import * as pulumi from "@pulumi/pulumi";
+import * as gcp from "@pulumi/gcp";
+import * as k8s from "@pulumi/kubernetes";
+
+// Create a GCP Resource Group
+const project = gcp.config.project || "my-gcp-project";
+const region = gcp.config.region || "us-central1";
+const location = "us-central1-a"; // Specific zone
+
+// Create a GKE cluster
+const cluster = new gcp.container.Cluster("app-cluster", {
+    initialNodeCount: 2,
+    minMasterVersion: "latest",
+    nodeVersion: "latest",
+    location: location,
+    nodeConfig: {
+        machineType: "n1-standard-1",
+        oauthScopes: [
+            "https://www.googleapis.com/auth/compute",
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring",
+        ],
+    },
+});
+
+// Export the Cluster name
+export const clusterName = cluster.name;
+
+// Export the Kubeconfig
+export const kubeconfig = pulumi.
+    all([cluster.name, cluster.endpoint, cluster.masterAuth]).
+    apply(([name, endpoint, masterAuth]) => {
+        const context = \`\${gcp.config.project}_\${gcp.config.zone}_\${name}\`;
+        return \`apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: \${masterAuth.clusterCaCertificate}
+    server: https://\${endpoint}
+  name: \${context}
+contexts:
+- context:
+    cluster: \${context}
+    user: \${context}
+  name: \${context}
+current-context: \${context}
+kind: Config
+preferences: {}
+users:
+- name: \${context}
+  user:
+    auth-provider:
+      config:
+        cmd-args: config config-helper --format=json
+        cmd-path: gcloud
+        expiry-key: '{.credential.token_expiry}'
+        token-key: '{.credential.access_token}'
+      name: gcp
+\`;
+    });
+
+// Create a Kubernetes provider instance that uses our cluster from above
+const clusterProvider = new k8s.Provider("gke-k8s", {
+    kubeconfig: kubeconfig,
+});
+
+// Create a Kubernetes Namespace
+const namespace = new k8s.core.v1.Namespace("app-namespace", {
+    metadata: {
+        name: "simple-app",
+    },
+}, { provider: clusterProvider });
+
+// Create a Kubernetes Deployment
+const appLabels = { app: "simple-app" };
+const deployment = new k8s.apps.v1.Deployment("simple-app", {
+    metadata: {
+        namespace: namespace.metadata.name,
+        labels: appLabels,
+    },
+    spec: {
+        replicas: 2,
+        selector: { matchLabels: appLabels },
+        template: {
+            metadata: { labels: appLabels },
+            spec: {
+                containers: [{
+                    name: "simple-app",
+                    image: "nginx:latest",
+                    ports: [{ name: "http", containerPort: 80 }],
+                    resources: {
+                        requests: {
+                            cpu: "100m",
+                            memory: "128Mi",
+                        },
+                        limits: {
+                            cpu: "250m",
+                            memory: "256Mi",
+                        },
+                    },
+                }],
+            },
+        },
+    },
+}, { provider: clusterProvider });
+
+// Create a Kubernetes Service
+const service = new k8s.core.v1.Service("simple-app-service", {
+    metadata: {
+        namespace: namespace.metadata.name,
+        labels: appLabels,
+    },
+    spec: {
+        type: "LoadBalancer",
+        ports: [{ port: 80, targetPort: "http" }],
+        selector: appLabels,
+    },
+}, { provider: clusterProvider });
+
+// Export the Service's IP address
+export const serviceIp = service.status.loadBalancer.ingress[0].ip;`;
+            }
+            
+            // Generate AWS Kubernetes code
+            function generateAWSKubernetesCode() {
+                return `// AWS EKS Cluster with a Simple Application
+import * as pulumi from "@pulumi/pulumi";
+import * as aws from "@pulumi/aws";
+import * as eks from "@pulumi/eks";
+import * as k8s from "@pulumi/kubernetes";
+
+// Create an AWS VPC for our cluster
+const vpc = new aws.ec2.Vpc("eks-vpc", {
+    cidrBlock: "10.0.0.0/16",
+    enableDnsHostnames: true,
+    enableDnsSupport: true,
+});
+
+// Create public subnets for the EKS cluster
+const publicSubnets = [];
+for (let i = 0; i < 2; i++) {
+    const publicSubnet = new aws.ec2.Subnet(\`public-subnet-\${i}\`, {
+        vpcId: vpc.id,
+        cidrBlock: \`10.0.\${i}.0/24\`,
+        mapPublicIpOnLaunch: true,
+        availabilityZone: \`us-west-2\${String.fromCharCode(97 + i)}\`,
+        tags: {
+            Name: \`eks-public-subnet-\${i}\`,
+            "kubernetes.io/role/elb": "1",
+        },
+    });
+    publicSubnets.push(publicSubnet);
+}
+
+// Create an internet gateway
+const internetGateway = new aws.ec2.InternetGateway("eks-igw", {
+    vpcId: vpc.id,
+    tags: {
+        Name: "eks-igw",
+    },
+});
+
+// Create a route table for public subnets
+const publicRouteTable = new aws.ec2.RouteTable("public-rt", {
+    vpcId: vpc.id,
+    routes: [{
+        cidrBlock: "0.0.0.0/0",
+        gatewayId: internetGateway.id,
+    }],
+    tags: {
+        Name: "eks-public-rt",
+    },
+});
+
+// Associate the route table with public subnets
+for (let i = 0; i < publicSubnets.length; i++) {
+    new aws.ec2.RouteTableAssociation(\`public-rta-\${i}\`, {
+        subnetId: publicSubnets[i].id,
+        routeTableId: publicRouteTable.id,
+    });
+}
+
+// Create an EKS cluster
+const cluster = new eks.Cluster("app-cluster", {
+    vpcId: vpc.id,
+    subnetIds: publicSubnets.map(subnet => subnet.id),
+    instanceType: "t3.medium",
+    desiredCapacity: 2,
+    minSize: 1,
+    maxSize: 3,
+    storageClasses: "gp2",
+    deployDashboard: false,
+});
+
+// Export the cluster's kubeconfig
+export const kubeconfig = cluster.kubeconfig;
+
+// Create a Kubernetes provider using the EKS cluster's kubeconfig
+const provider = new k8s.Provider("k8s-provider", {
+    kubeconfig: cluster.kubeconfig.apply(JSON.stringify),
+});
+
+// Create a Kubernetes Namespace
+const namespace = new k8s.core.v1.Namespace("app-namespace", {
+    metadata: {
+        name: "simple-app",
+    },
+}, { provider: provider });
+
+// Create a Kubernetes Deployment
+const appLabels = { app: "simple-app" };
+const deployment = new k8s.apps.v1.Deployment("simple-app", {
+    metadata: {
+        namespace: namespace.metadata.name,
+        labels: appLabels,
+    },
+    spec: {
+        replicas: 2,
+        selector: { matchLabels: appLabels },
+        template: {
+            metadata: { labels: appLabels },
+            spec: {
+                containers: [{
+                    name: "simple-app",
+                    image: "nginx:latest",
+                    ports: [{ name: "http", containerPort: 80 }],
+                    resources: {
+                        requests: {
+                            cpu: "100m",
+                            memory: "128Mi",
+                        },
+                        limits: {
+                            cpu: "250m",
+                            memory: "256Mi",
+                        },
+                    },
+                }],
+            },
+        },
+    },
+}, { provider: provider });
+
+// Create a Kubernetes Service
+const service = new k8s.core.v1.Service("simple-app-service", {
+    metadata: {
+        namespace: namespace.metadata.name,
+        labels: appLabels,
+    },
+    spec: {
+        type: "LoadBalancer",
+        ports: [{ port: 80, targetPort: "http" }],
+        selector: appLabels,
+    },
+}, { provider: provider });
+
+// Export the Service's URL
+export const serviceUrl = service.status.loadBalancer.ingress[0].hostname;`;
+            }
+            
+            // Generate Azure Kubernetes code
+            function generateAzureKubernetesCode() {
+                return `// Azure Kubernetes Service (AKS) with a Simple Application
+import * as pulumi from "@pulumi/pulumi";
+import * as azure from "@pulumi/azure-native";
+import * as k8s from "@pulumi/kubernetes";
+
+// Create an Azure Resource Group
+const resourceGroup = new azure.resources.ResourceGroup("app-rg");
+
+// Create an AKS cluster
+const cluster = new azure.containerservice.ManagedCluster("app-cluster", {
+    resourceGroupName: resourceGroup.name,
+    agentPoolProfiles: [{
+        count: 2,
+        maxPods: 110,
+        mode: "System",
+        name: "agentpool",
+        osDiskSizeGB: 30,
+        osType: "Linux",
+        vmSize: "Standard_DS2_v2",
+    }],
+    dnsPrefix: "app-cluster",
+    enableRBAC: true,
+    kubernetesVersion: "1.24.9",
+    identity: {
+        type: "SystemAssigned",
+    },
+});
+
+// Export the kubeconfig
+export const kubeconfig = pulumi.all([
+    resourceGroup.name,
+    cluster.name,
+]).apply(([rgName, clusterName]) => {
+    return azure.containerservice.listManagedClusterUserCredentials({
+        resourceGroupName: rgName,
+        resourceName: clusterName,
+    }).then(creds => {
+        const encoded = creds.kubeconfigs[0].value;
+        return Buffer.from(encoded, "base64").toString();
+    });
+});
+
+// Create a Kubernetes provider
+const k8sProvider = new k8s.Provider("k8s-provider", {
+    kubeconfig: kubeconfig,
+});
+
+// Create a Kubernetes Namespace
+const namespace = new k8s.core.v1.Namespace("app-namespace", {
+    metadata: {
+        name: "simple-app",
+    },
+}, { provider: k8sProvider });
+
+// Create a Kubernetes Deployment
+const appLabels = { app: "simple-app" };
+const deployment = new k8s.apps.v1.Deployment("simple-app", {
+    metadata: {
+        namespace: namespace.metadata.name,
+        labels: appLabels,
+    },
+    spec: {
+        replicas: 2,
+        selector: { matchLabels: appLabels },
+        template: {
+            metadata: { labels: appLabels },
+            spec: {
+                containers: [{
+                    name: "simple-app",
+                    image: "nginx:latest",
+                    ports: [{ name: "http", containerPort: 80 }],
+                    resources: {
+                        requests: {
+                            cpu: "100m",
+                            memory: "128Mi",
+                        },
+                        limits: {
+                            cpu: "250m",
+                            memory: "256Mi",
+                        },
+                    },
+                }],
+            },
+        },
+    },
+}, { provider: k8sProvider });
+
+// Create a Kubernetes Service
+const service = new k8s.core.v1.Service("simple-app-service", {
+    metadata: {
+        namespace: namespace.metadata.name,
+        labels: appLabels,
+    },
+    spec: {
+        type: "LoadBalancer",
+        ports: [{ port: 80, targetPort: "http" }],
+        selector: appLabels,
+    },
+}, { provider: k8sProvider });
+
+// Export the Service's IP address
+export const serviceIp = service.status.loadBalancer.ingress[0].ip;`;
+            }
+            
+            // Generate Azure VPC code
+            function generateAzureVPCCode() {
+                return `// Azure Virtual Network Configuration
+import * as pulumi from "@pulumi/pulumi";
+import * as azure from "@pulumi/azure-native";
+import * as network from "@pulumi/azure-native/network";
+
+// Create a resource group
+const resourceGroup = new azure.resources.ResourceGroup("azure-vpc-rg");
+
+// Create a virtual network (VPC equivalent in Azure)
+const virtualNetwork = new network.VirtualNetwork("azure-vnet", {
+    resourceGroupName: resourceGroup.name,
+    addressSpace: {
+        addressPrefixes: ["10.0.0.0/16"],
+    },
+    subnets: [
+        {
+            name: "frontend-subnet",
+            addressPrefix: "10.0.1.0/24",
+        },
+        {
+            name: "backend-subnet",
+            addressPrefix: "10.0.2.0/24",
+        },
+        {
+            name: "database-subnet",
+            addressPrefix: "10.0.3.0/24",
+        },
+    ],
+});
+
+// Create a network security group
+const nsg = new network.NetworkSecurityGroup("azure-nsg", {
+    resourceGroupName: resourceGroup.name,
+    securityRules: [
+        {
+            name: "allow-http",
+            priority: 100,
+            direction: "Inbound",
+            access: "Allow",
+            protocol: "Tcp",
+            sourceAddressPrefix: "*",
+            sourcePortRange: "*",
+            destinationAddressPrefix: "*",
+            destinationPortRange: "80",
+        },
+        {
+            name: "allow-https",
+            priority: 110,
+            direction: "Inbound",
+            access: "Allow",
+            protocol: "Tcp",
+            sourceAddressPrefix: "*",
+            sourcePortRange: "*",
+            destinationAddressPrefix: "*",
+            destinationPortRange: "443",
+        },
+    ],
+});
+
+export const vnetName = virtualNetwork.name;
+export const vnetId = virtualNetwork.id;
+export const resourceGroupName = resourceGroup.name;`;
+            }
+            
+            // Generate AWS VPC code
+            function generateAWSVPCCode() {
+                return `// AWS VPC Configuration with Public and Private Subnets
+import * as pulumi from "@pulumi/pulumi";
+import * as aws from "@pulumi/aws";
+
+// Create a VPC
+const vpc = new aws.ec2.Vpc("main-vpc", {
+    cidrBlock: "10.0.0.0/16",
+    enableDnsHostnames: true,
+    enableDnsSupport: true,
+    tags: {
+        Name: "main-vpc",
+    },
+});
+
+// Create an Internet Gateway
+const internetGateway = new aws.ec2.InternetGateway("igw", {
+    vpcId: vpc.id,
+    tags: {
+        Name: "main-igw",
+    },
+});
+
+// Create public subnets in different AZs
+const publicSubnet1 = new aws.ec2.Subnet("public-subnet-1", {
+    vpcId: vpc.id,
+    cidrBlock: "10.0.1.0/24",
+    availabilityZone: "us-west-2a",
+    mapPublicIpOnLaunch: true,
+    tags: {
+        Name: "public-subnet-1",
+    },
+});
+
+const publicSubnet2 = new aws.ec2.Subnet("public-subnet-2", {
+    vpcId: vpc.id,
+    cidrBlock: "10.0.2.0/24",
+    availabilityZone: "us-west-2b",
+    mapPublicIpOnLaunch: true,
+    tags: {
+        Name: "public-subnet-2",
+    },
+});
+
+// Create private subnets in different AZs
+const privateSubnet1 = new aws.ec2.Subnet("private-subnet-1", {
+    vpcId: vpc.id,
+    cidrBlock: "10.0.3.0/24",
+    availabilityZone: "us-west-2a",
+    tags: {
+        Name: "private-subnet-1",
+    },
+});
+
+const privateSubnet2 = new aws.ec2.Subnet("private-subnet-2", {
+    vpcId: vpc.id,
+    cidrBlock: "10.0.4.0/24",
+    availabilityZone: "us-west-2b",
+    tags: {
+        Name: "private-subnet-2",
+    },
+});
+
+// Create a route table for public subnets
+const publicRouteTable = new aws.ec2.RouteTable("public-rt", {
+    vpcId: vpc.id,
+    routes: [
+        {
+            cidrBlock: "0.0.0.0/0",
+            gatewayId: internetGateway.id,
+        },
+    ],
+    tags: {
+        Name: "public-rt",
+    },
+});
+
+// Associate public subnets with the public route table
+const publicRtAssociation1 = new aws.ec2.RouteTableAssociation("public-rta-1", {
+    subnetId: publicSubnet1.id,
+    routeTableId: publicRouteTable.id,
+});
+
+const publicRtAssociation2 = new aws.ec2.RouteTableAssociation("public-rta-2", {
+    subnetId: publicSubnet2.id,
+    routeTableId: publicRouteTable.id,
+});
+
+// Create an Elastic IP for the NAT Gateway
+const eip = new aws.ec2.Eip("nat-eip", {
+    vpc: true,
+    tags: {
+        Name: "nat-eip",
+    },
+});
+
+// Create a NAT Gateway
+const natGateway = new aws.ec2.NatGateway("nat-gateway", {
+    allocationId: eip.id,
+    subnetId: publicSubnet1.id,
+    tags: {
+        Name: "nat-gateway",
+    },
+});
+
+// Create a route table for private subnets
+const privateRouteTable = new aws.ec2.RouteTable("private-rt", {
+    vpcId: vpc.id,
+    routes: [
+        {
+            cidrBlock: "0.0.0.0/0",
+            natGatewayId: natGateway.id,
+        },
+    ],
+    tags: {
+        Name: "private-rt",
+    },
+});
+
+// Associate private subnets with the private route table
+const privateRtAssociation1 = new aws.ec2.RouteTableAssociation("private-rta-1", {
+    subnetId: privateSubnet1.id,
+    routeTableId: privateRouteTable.id,
+});
+
+const privateRtAssociation2 = new aws.ec2.RouteTableAssociation("private-rta-2", {
+    subnetId: privateSubnet2.id,
+    routeTableId: privateRouteTable.id,
+});
+
+// Export the VPC and subnet IDs
+export const vpcId = vpc.id;
+export const publicSubnetIds = [publicSubnet1.id, publicSubnet2.id];
+export const privateSubnetIds = [privateSubnet1.id, privateSubnet2.id];`;
+            }
+            
+            // Try to call the backend API first with a timeout
+            const apiTimeout = 10000; // 10 seconds timeout
+            
+            // Create a promise that rejects after the timeout
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('API request timed out')), apiTimeout);
+            });
+            
+            // Create the fetch promise
+            const fetchPromise = fetch('https://instantiate-backend-txxzhbkj.fly.dev/api/generate-infrastructure', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: prompt })
+            });
+            
+            // Race the fetch against the timeout
+            Promise.race([fetchPromise, timeoutPromise])
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`API responded with status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('API response:', data);
+                    
+                    // Store the cloud provider and infra type
+                    window.generatedCloudProvider = data.cloudProvider;
+                    window.generatedInfraType = data.infraType;
+                    
+                    // Display the generated code with syntax highlighting
+                    const codeOutput = document.getElementById('code-output');
+                    codeOutput.innerHTML = `
+                        <div class="code-header">
+                            <div class="code-title">${data.cloudProvider} ${data.infraType} Infrastructure</div>
+                            <div class="code-actions">
+                                <button id="copy-btn" class="action-btn">Copy Code</button>
+                                <button id="edit-btn" class="action-btn">Edit Code</button>
+                                <button id="deploy-btn" class="action-btn">Deploy Infrastructure</button>
+                            </div>
+                        </div>
+                        <pre><code class="language-typescript">${data.code}</code></pre>
+                    `;
+                    
+                    // Apply syntax highlighting
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+                    
+                    // Set up copy button
+                    document.getElementById('copy-btn').addEventListener('click', function() {
+                        const code = data.code;
+                        navigator.clipboard.writeText(code).then(function() {
+                            alert('Code copied to clipboard!');
+                        }, function(err) {
+                            console.error('Could not copy text: ', err);
+                        });
+                    });
+                    
+                    // Set up edit button
+                    document.getElementById('edit-btn').addEventListener('click', function() {
+                        const codeEditor = document.createElement('textarea');
+                        codeEditor.value = data.code;
+                        codeEditor.style.width = '100%';
+                        codeEditor.style.height = '400px';
+                        codeEditor.style.fontFamily = 'monospace';
+                        
+                        const codeContainer = document.querySelector('#code-output pre');
+                        codeContainer.replaceWith(codeEditor);
+                        
+                        // Add save button
+                        const saveBtn = document.createElement('button');
+                        saveBtn.textContent = 'Save Changes';
+                        saveBtn.className = 'action-btn';
+                        saveBtn.style.marginTop = '10px';
+                        
+                        saveBtn.addEventListener('click', function() {
+                            const updatedCode = codeEditor.value;
+                            
+                            // Update the code display
+                            codeOutput.innerHTML = `
+                                <div class="code-header">
+                                    <div class="code-title">${data.cloudProvider} ${data.infraType} Infrastructure (Edited)</div>
+                                    <div class="code-actions">
+                                        <button id="copy-btn" class="action-btn">Copy Code</button>
+                                        <button id="edit-btn" class="action-btn">Edit Code</button>
+                                        <button id="deploy-btn" class="action-btn">Deploy Infrastructure</button>
+                                    </div>
+                                </div>
+                                <pre><code class="language-typescript">${updatedCode}</code></pre>
+                            `;
+                            
+                            // Re-apply syntax highlighting
+                            document.querySelectorAll('pre code').forEach((block) => {
+                                hljs.highlightElement(block);
+                            });
+                            
+                            // Re-attach event listeners
+                            document.getElementById('copy-btn').addEventListener('click', function() {
+                                navigator.clipboard.writeText(updatedCode).then(function() {
+                                    alert('Code copied to clipboard!');
+                                }, function(err) {
+                                    console.error('Could not copy text: ', err);
+                                });
+                            });
+                            
+                            document.getElementById('edit-btn').addEventListener('click', function() {
+                                // Re-enter edit mode
+                                const codeEditor = document.createElement('textarea');
+                                codeEditor.value = updatedCode;
+                                codeEditor.style.width = '100%';
+                                codeEditor.style.height = '400px';
+                                codeEditor.style.fontFamily = 'monospace';
+                                
+                                const codeContainer = document.querySelector('#code-output pre');
+                                codeContainer.replaceWith(codeEditor);
+                                
+                                // Add save button again
+                                codeEditor.after(saveBtn);
+                            });
+                        });
+                        
+                        codeEditor.after(saveBtn);
+                    });
+                    
+                    // Set up deploy button with proper deployment functionality
+                    document.getElementById('deploy-btn').addEventListener('click', function() {
+                        const deployBtn = this;
+                        const originalText = deployBtn.textContent;
+                        
+                        // Show deploying state
+                        deployBtn.textContent = 'Deploying...';
+                        deployBtn.disabled = true;
+                        
+                        // Get cloud provider and infrastructure type from window variables or detect from code
+                        const codeText = document.querySelector('#code-output pre code').textContent;
+                        let cloudProvider = window.generatedCloudProvider || detectCloudProviderFromPrompt(codeText);
+                        let infraType = window.generatedInfraType || detectInfraTypeFromPrompt(codeText);
+                        
+                        // Simulate deployment process
+                        setTimeout(() => {
+                            // Show success message
+                            deployBtn.textContent = 'Deployed ✓';
+                            deployBtn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+                            
+                            // Add to recent infrastructure list
+                            const infraList = document.querySelector('.infra-list');
+                            const newInfra = document.createElement('li');
+                            newInfra.className = 'infra-item';
+                            newInfra.innerHTML = `
+                                <div class="infra-details">
+                                    <h4>${cloudProvider} ${infraType}</h4>
+                                    <p>Created just now • ${cloudProvider}</p>
+                                </div>
+                                <span class="infra-status status-deployed">Deployed</span>
+                            `;
+                            
+                            // Insert at the top of the list
+                            infraList.insertBefore(newInfra, infraList.firstChild);
+                            
+                            // Reset button after some time
+                            setTimeout(() => {
+                                deployBtn.textContent = originalText;
+                                deployBtn.disabled = false;
+                                deployBtn.style.background = 'var(--primary-gradient)';
+                            }, 3000);
+                        }, 2000);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error calling API:', error);
+                    
+                    // Fallback to local code generation
+                    const cloudProvider = detectCloudProviderFromPrompt(prompt);
+                    const infraType = detectInfraTypeFromPrompt(prompt);
+                    
+                    console.log('Using fallback code generation with:', { cloudProvider, infraType });
+                    
+                    // Store the cloud provider and infra type
+                    window.generatedCloudProvider = cloudProvider;
+                    window.generatedInfraType = infraType;
+                    
+                    // Generate code based on detected provider and type
+                    let generatedCode = '';
+                    
+                    if (cloudProvider === 'GCP' && infraType === 'Kubernetes') {
+                        generatedCode = generateGCPKubernetesCode();
+                    } else if (cloudProvider === 'AWS' && infraType === 'Kubernetes') {
+                        generatedCode = generateAWSKubernetesCode();
+                    } else if (cloudProvider === 'Azure' && infraType === 'Kubernetes') {
+                        generatedCode = generateAzureKubernetesCode();
+                    } else if (cloudProvider === 'Azure' && infraType === 'VPC') {
+                        generatedCode = generateAzureVPCCode();
+                    } else if (cloudProvider === 'AWS' && infraType === 'VPC') {
+                        generatedCode = generateAWSVPCCode();
+                    } else {
+                        // Default fallback
+                        if (cloudProvider === 'GCP') {
+                            generatedCode = generateGCPKubernetesCode();
+                        } else if (cloudProvider === 'AWS') {
+                            generatedCode = generateAWSVPCCode();
+                        } else {
+                            generatedCode = generateAzureVPCCode();
+                        }
+                    }
+                    
+                    // Display the generated code with syntax highlighting
+                    const codeOutput = document.getElementById('code-output');
+                    codeOutput.innerHTML = `
+                        <div class="code-header">
+                            <div class="code-title">${cloudProvider} ${infraType} Infrastructure (Local Generation)</div>
+                            <div class="code-actions">
+                                <button id="copy-btn" class="action-btn">Copy Code</button>
+                                <button id="edit-btn" class="action-btn">Edit Code</button>
+                                <button id="deploy-btn" class="action-btn">Deploy Infrastructure</button>
+                            </div>
+                        </div>
+                        <pre><code class="language-typescript">${generatedCode}</code></pre>
+                    `;
+                    
+                    // Apply syntax highlighting
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+                    
+                    // Set up copy button
+                    document.getElementById('copy-btn').addEventListener('click', function() {
+                        navigator.clipboard.writeText(generatedCode).then(function() {
+                            alert('Code copied to clipboard!');
+                        }, function(err) {
+                            console.error('Could not copy text: ', err);
+                        });
+                    });
+                    
+                    // Set up edit button
+                    document.getElementById('edit-btn').addEventListener('click', function() {
+                        const codeEditor = document.createElement('textarea');
+                        codeEditor.value = generatedCode;
+                        codeEditor.style.width = '100%';
+                        codeEditor.style.height = '400px';
+                        codeEditor.style.fontFamily = 'monospace';
+                        
+                        const codeContainer = document.querySelector('#code-output pre');
+                        codeContainer.replaceWith(codeEditor);
+                        
+                        // Add save button
+                        const saveBtn = document.createElement('button');
+                        saveBtn.textContent = 'Save Changes';
+                        saveBtn.className = 'action-btn';
+                        saveBtn.style.marginTop = '10px';
+                        
+                        saveBtn.addEventListener('click', function() {
+                            const updatedCode = codeEditor.value;
+                            
+                            // Update the code display
+                            codeOutput.innerHTML = `
+                                <div class="code-header">
+                                    <div class="code-title">${cloudProvider} ${infraType} Infrastructure (Edited)</div>
+                                    <div class="code-actions">
+                                        <button id="copy-btn" class="action-btn">Copy Code</button>
+                                        <button id="edit-btn" class="action-btn">Edit Code</button>
+                                        <button id="deploy-btn" class="action-btn">Deploy Infrastructure</button>
+                                    </div>
+                                </div>
+                                <pre><code class="language-typescript">${updatedCode}</code></pre>
+                            `;
+                            
+                            // Re-apply syntax highlighting
+                            document.querySelectorAll('pre code').forEach((block) => {
+                                hljs.highlightElement(block);
+                            });
+                            
+                            // Re-attach event listeners
+                            document.getElementById('copy-btn').addEventListener('click', function() {
+                                navigator.clipboard.writeText(updatedCode).then(function() {
+                                    alert('Code copied to clipboard!');
+                                }, function(err) {
+                                    console.error('Could not copy text: ', err);
+                                });
+                            });
+                            
+                            document.getElementById('edit-btn').addEventListener('click', function() {
+                                // Re-enter edit mode
+                                const codeEditor = document.createElement('textarea');
+                                codeEditor.value = updatedCode;
+                                codeEditor.style.width = '100%';
+                                codeEditor.style.height = '400px';
+                                codeEditor.style.fontFamily = 'monospace';
+                                
+                                const codeContainer = document.querySelector('#code-output pre');
+                                codeContainer.replaceWith(codeEditor);
+                                
+                                // Add save button again
+                                codeEditor.after(saveBtn);
+                            });
+                        });
+                        
+                        codeEditor.after(saveBtn);
+                    });
+                    
+                    // Set up deploy button with proper deployment functionality
+                    document.getElementById('deploy-btn').addEventListener('click', function() {
+                        const deployBtn = this;
+                        const originalText = deployBtn.textContent;
+                        
+                        // Show deploying state
+                        deployBtn.textContent = 'Deploying...';
+                        deployBtn.disabled = true;
+                        
+                        // Get cloud provider and infrastructure type from window variables or detect from code
+                        const codeText = document.querySelector('#code-output pre code').textContent;
+                        let cloudProvider = window.generatedCloudProvider || detectCloudProviderFromPrompt(codeText);
+                        let infraType = window.generatedInfraType || detectInfraTypeFromPrompt(codeText);
+                        
+                        // Simulate deployment process
+                        setTimeout(() => {
+                            // Show success message
+                            deployBtn.textContent = 'Deployed ✓';
+                            deployBtn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+                            
+                            // Add to recent infrastructure list
+                            const infraList = document.querySelector('.infra-list');
+                            const newInfra = document.createElement('li');
+                            newInfra.className = 'infra-item';
+                            newInfra.innerHTML = `
+                                <div class="infra-details">
+                                    <h4>${cloudProvider} ${infraType}</h4>
+                                    <p>Created just now • ${cloudProvider}</p>
+                                </div>
+                                <span class="infra-status status-deployed">Deployed</span>
+                            `;
+                            
+                            // Insert at the top of the list
+                            infraList.insertBefore(newInfra, infraList.firstChild);
+                            
+                            // Reset button after some time
+                            setTimeout(() => {
+                                deployBtn.textContent = originalText;
+                                deployBtn.disabled = false;
+                                deployBtn.style.background = 'var(--primary-gradient)';
+                            }, 3000);
+                        }, 2000);
+                    });
+                });
+        });
+        
+        // Add functionality to Deploy Infrastructure button
+        document.getElementById('deploy-btn').addEventListener('click', function() {
+            const deployBtn = this;
+            const originalText = deployBtn.textContent;
+            
+            // Show deploying state
+            deployBtn.textContent = 'Deploying...';
+            deployBtn.disabled = true;
+            
+            // Get cloud provider and infrastructure type from window variables or detect from code
+            const codeText = document.getElementById('code-content').textContent;
+            let cloudProvider = window.generatedCloudProvider || detectCloudProvider(codeText);
+            let infraType = window.generatedInfraType || detectInfraType(codeText);
+            
+            // Simulate deployment process
+            setTimeout(() => {
+                // Show success message
+                deployBtn.textContent = 'Deployed ✓';
+                deployBtn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+                
+                // Add to recent infrastructure list
+                const infraList = document.querySelector('.infra-list');
+                const newInfra = document.createElement('li');
+                newInfra.className = 'infra-item';
+                newInfra.innerHTML = `
+                    <div class="infra-details">
+                        <h4>${cloudProvider} ${infraType}</h4>
+                        <p>Created just now • ${cloudProvider}</p>
+                    </div>
+                    <span class="infra-status status-deployed">Deployed</span>
+                `;
+                
+                // Insert at the top of the list
+                infraList.insertBefore(newInfra, infraList.firstChild);
+                
+                // Reset button after some time
+                setTimeout(() => {
+                    deployBtn.textContent = originalText;
+                    deployBtn.disabled = false;
+                    deployBtn.style.background = 'var(--primary-gradient)';
+                }, 3000);
+            }, 2000);
+        });
+        
+        // Add functionality to Edit Code button
+        document.getElementById('edit-btn').addEventListener('click', function() {
+            const codeContent = document.getElementById('code-content');
+            const codeText = codeContent.textContent.trim();
+            
+            // Create a textarea with the current code
+            const textarea = document.createElement('textarea');
+            textarea.id = 'code-editor';
+            textarea.value = codeText;
+            textarea.style.width = '100%';
+            textarea.style.minHeight = '400px';
+            textarea.style.padding = '1rem';
+            textarea.style.backgroundColor = '#0F172A';
+            textarea.style.color = '#F8FAFC';
+            textarea.style.border = '1px solid #334155';
+            textarea.style.borderRadius = '0.5rem';
+            textarea.style.fontFamily = 'Fira Code, Courier New, monospace';
+            textarea.style.fontSize = '0.875rem';
+            
+            // Replace the code preview with the textarea
+            const codePreview = codeContent.parentNode;
+            codePreview.replaceChild(textarea, codeContent);
+            
+            // Change the Edit button to a Save button
+            this.textContent = 'Save Changes';
+            this.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+            
+            // Add event listener to the Save button
+            this.removeEventListener('click', arguments.callee);
+            this.addEventListener('click', function() {
+                // Get the edited code
+                const editedCode = document.getElementById('code-editor').value;
+                
+                // Create a new code preview element
+                const newCodeContent = document.createElement('div');
+                newCodeContent.id = 'code-content';
+                newCodeContent.className = 'code-preview';
+                
+                // Format the code with syntax highlighting (simplified version)
+                const formattedCode = editedCode
+                    .replace(/\/\/.*/g, match => `<span class="comment">${match}</span>`)
+                    .replace(/\b(import|export|const|new|as|from)\b/g, match => `<span class="keyword">${match}</span>`)
+                    .replace(/\b(true|false)\b/g, match => `<span class="keyword">${match}</span>`)
+                    .replace(/"[^"]*"/g, match => `<span class="string">${match}</span>`);
+                
+                newCodeContent.innerHTML = formattedCode;
+                
+                // Replace the textarea with the new code preview
+                const textarea = document.getElementById('code-editor');
+                textarea.parentNode.replaceChild(newCodeContent, textarea);
+                
+                // Change the Save button back to Edit button
+                this.textContent = 'Edit Code';
+                this.style.background = '#334155';
+                
+                // Reset the event listener
+                this.removeEventListener('click', arguments.callee);
+                document.getElementById('edit-btn').addEventListener('click', arguments.callee.caller);
+            });
+        });
+        
+        // Add functionality to Copy Code button
+        document.getElementById('copy-btn').addEventListener('click', function() {
+            // Get the code content
+            const codeContent = document.getElementById('code-content');
+            let codeToCopy;
+            
+            // Check if we're in edit mode
+            const codeEditor = document.getElementById('code-editor');
+            if (codeEditor) {
+                codeToCopy = codeEditor.value;
+            } else {
+                codeToCopy = codeContent.textContent;
+            }
+            
+            // Create a temporary textarea element to copy from
+            const textarea = document.createElement('textarea');
+            textarea.value = codeToCopy;
+            textarea.style.position = 'fixed';  // Prevent scrolling to the bottom
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                // Execute the copy command
+                const successful = document.execCommand('copy');
+                if (!successful) throw new Error('Copy command was unsuccessful');
+                
+                // Show success feedback
+                const originalText = this.textContent;
+                const originalBackground = this.style.background;
+                
+                this.textContent = 'Copied! ✓';
+                this.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+                
+                // Reset button after some time
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.style.background = originalBackground;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                
+                // Fallback to clipboard API if available
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(codeToCopy)
+                        .then(() => {
+                            // Show success feedback
+                            const originalText = this.textContent;
+                            const originalBackground = this.style.background;
+                            
+                            this.textContent = 'Copied! ✓';
+                            this.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+                            
+                            // Reset button after some time
+                            setTimeout(() => {
+                                this.textContent = originalText;
+                                this.style.background = originalBackground;
+                            }, 2000);
+                        })
+                        .catch(err => {
+                            console.error('Clipboard API failed: ', err);
+                            alert('Failed to copy code to clipboard. Please try again.');
+                        });
+                } else {
+                    alert('Failed to copy code to clipboard. Please try again.');
+                }
+            } finally {
+                // Clean up
+                document.body.removeChild(textarea);
+            }
+        });
+    </script>
+</body>
+</html>
