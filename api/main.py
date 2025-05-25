@@ -14,7 +14,7 @@ app = FastAPI(title="Instanti8.dev API", description="API for Instanti8.dev infr
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For production, replace with specific origins
+    allow_origins=os.getenv("CORS_ORIGINS", "https://multi-cloud-iac-agent-i3d4dp7s.devinapps.com,http://localhost:5173").split(","),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
