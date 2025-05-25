@@ -49,6 +49,8 @@ def detect_infrastructure_type(prompt: str) -> str:
         return "Serverless"
     elif "vpc" in prompt_lower or "network" in prompt_lower:
         return "Network"
+    elif "vm" in prompt_lower or "virtual machine" in prompt_lower or "compute instance" in prompt_lower:
+        return "VM"
     else:
         return "general"  # Default to general if no type specified
 
@@ -100,7 +102,77 @@ The code should be ready to use with Pulumi CLI.
 def generate_sample_code(cloud_provider: str, infra_type: str) -> str:
     """Generate sample Pulumi TypeScript code based on cloud provider and infrastructure type"""
     
-    if cloud_provider == "Google Cloud Platform" and infra_type == "Kubernetes":
+    if cloud_provider == "Google Cloud Platform" and infra_type == "VM":
+        return """
+import * as pulumi from "@pulumi/pulumi";
+import * as gcp from "@pulumi/gcp";
+
+// Configuration
+const config = new pulumi.Config();
+const namePrefix = config.get("namePrefix") || "app";
+const machineType = config.get("machineType") || "e2-medium";
+const zone = config.get("zone") || "us-central1-a";
+const tags = {
+    "Environment": "Development",
+    "Project": "VMDemo",
+    "ManagedBy": "Pulumi"
+};
+
+// Create a GCP Resource Group
+const project = gcp.config.project || "my-gcp-project";
+
+// Create a network for the VM
+const network = new gcp.compute.Network(`${namePrefix}-network`, {
+    autoCreateSubnetworks: true,
+    description: "Network for the GCP VM",
+});
+
+// Create a firewall rule to allow SSH access
+const firewall = new gcp.compute.Firewall(`${namePrefix}-firewall`, {
+    network: network.selfLink,
+    allows: [{
+        protocol: "tcp",
+        ports: ["22", "80", "443"],
+    }],
+    sourceRanges: ["0.0.0.0/0"],
+    targetTags: ["web-server"],
+});
+
+// Create a VM instance
+const vm = new gcp.compute.Instance(`${namePrefix}-vm`, {
+    machineType: machineType,
+    zone: zone,
+    bootDisk: {
+        initializeParams: {
+            image: "debian-cloud/debian-11",
+            size: 20, // GB
+        },
+    },
+    networkInterfaces: [{
+        network: network.id,
+        accessConfigs: [{
+            // Ephemeral public IP
+            natIp: "",
+        }],
+    }],
+    tags: ["web-server"],
+    metadata: {
+        "startup-script": `#!/bin/bash
+            apt-get update
+            apt-get install -y nginx
+            systemctl start nginx
+            systemctl enable nginx`,
+    },
+    labels: tags,
+});
+
+// Export the VM details
+export const vmName = vm.name;
+export const vmExternalIp = vm.networkInterfaces[0].accessConfigs[0].natIp;
+export const vmInternalIp = vm.networkInterfaces[0].networkIp;
+export const sshCommand = pulumi.interpolate`gcloud compute ssh ${vm.name} --zone ${zone}`;
+"""
+    elif cloud_provider == "Google Cloud Platform" and infra_type == "Kubernetes":
         return """
 import * as pulumi from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
