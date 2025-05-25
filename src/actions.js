@@ -2,6 +2,26 @@ import { HttpError } from 'wasp/server';
 import { generateIaC } from './externalIaCService';
 import { validateIaC } from './iacValidationService';
 import * as pulumi from '@pulumi/pulumi';
+import { configureProviderEnvironment } from './cloudCredentialService';
+
+/**
+ * Detect the cloud provider from infrastructure description
+ * @param {string} description - Infrastructure description
+ * @returns {string} - Detected cloud provider (aws, azure, gcp)
+ */
+function detectCloudProvider(description) {
+  const text = description.toLowerCase();
+  
+  if (text.includes('aws') || text.includes('amazon')) {
+    return 'aws';
+  } else if (text.includes('azure') || text.includes('microsoft')) {
+    return 'azure';
+  } else if (text.includes('gcp') || text.includes('google')) {
+    return 'gcp';
+  }
+  
+  return 'aws';
+}
 
 export const generateInfrastructure = async (args, context) => {
   if (!context.user) { throw new HttpError(401); };
@@ -60,13 +80,30 @@ export const validateAndDeployInfrastructure = async ({ infrastructureId }, cont
     
     console.log("Infrastructure found, validating code...");
     
-    // Validate the generated IaC code (properly await the async function)
+    // Validate the generated IaC code
     const isValid = await validateIaC(infrastructure.code);
     if (!isValid) {
       throw new Error("Infrastructure as Code validation failed");
     }
     
-    console.log("Infrastructure code validated successfully, deploying...");
+    console.log("Infrastructure code validated successfully, preparing to deploy...");
+    
+    const cloudProvider = detectCloudProvider(infrastructure.description);
+    
+    // Update infrastructure status to deploying
+    await context.entities.Infrastructure.update({
+      where: { id: infrastructureId },
+      data: { 
+        status: "deploying",
+        deploymentDetails: JSON.stringify({ status: "in_progress", provider: cloudProvider })
+      }
+    });
+    
+    const env = await configureProviderEnvironment(context.user.id, cloudProvider);
+    
+    if (!process.env.PULUMI_ACCESS_TOKEN) {
+      throw new Error("PULUMI_ACCESS_TOKEN environment variable is not set");
+    }
     
     // Deploy the infrastructure using Pulumi with proper configuration
     const stack = new pulumi.Stack("auto-generated", {
@@ -74,16 +111,35 @@ export const validateAndDeployInfrastructure = async ({ infrastructureId }, cont
       program: () => {
         const pulumiCode = new Function('pulumi', infrastructure.code);
         pulumiCode(pulumi);
-      }
+      },
+      environmentVariables: env
     });
     
-    if (!process.env.PULUMI_ACCESS_TOKEN) {
-      console.warn("PULUMI_ACCESS_TOKEN environment variable is not set");
-    }
+    // Deploy the stack with progress tracking
+    const deploymentStart = Date.now();
+    console.log("Starting infrastructure deployment...");
     
-    // Deploy the stack
     const result = await stack.up({
-      onOutput: (output) => console.log(output)
+      onOutput: (output) => {
+        console.log(output);
+        // Update deployment details with progress information
+        try {
+          context.entities.Infrastructure.update({
+            where: { id: infrastructureId },
+            data: { 
+              deploymentDetails: JSON.stringify({ 
+                status: "in_progress", 
+                provider: cloudProvider,
+                logs: output,
+                startTime: deploymentStart,
+                lastUpdate: Date.now()
+              })
+            }
+          });
+        } catch (error) {
+          console.error("Error updating deployment progress:", error);
+        }
+      }
     });
     
     console.log("Infrastructure deployed successfully");
@@ -93,12 +149,23 @@ export const validateAndDeployInfrastructure = async ({ infrastructureId }, cont
       where: { id: infrastructureId },
       data: { 
         status: "deployed",
-        deploymentDetails: JSON.stringify(result)
+        deploymentDetails: JSON.stringify({
+          status: "success",
+          provider: cloudProvider,
+          result: result,
+          startTime: deploymentStart,
+          endTime: Date.now(),
+          outputs: result.outputs
+        })
       }
     });
     
     console.log("Infrastructure status updated to 'deployed'");
-    return { success: true, message: "Infrastructure deployed successfully" };
+    return { 
+      success: true, 
+      message: "Infrastructure deployed successfully", 
+      outputs: result.outputs 
+    };
   } catch (error) {
     console.error("Error deploying infrastructure:", error);
     
@@ -109,7 +176,11 @@ export const validateAndDeployInfrastructure = async ({ infrastructureId }, cont
           where: { id: infrastructureId },
           data: { 
             status: "failed",
-            deploymentDetails: JSON.stringify({ error: error.message })
+            deploymentDetails: JSON.stringify({ 
+              status: "error", 
+              error: error.message,
+              timestamp: Date.now() 
+            })
           }
         });
         console.log("Infrastructure status updated to 'failed'");

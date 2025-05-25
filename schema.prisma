@@ -15,11 +15,13 @@ model User {
 }
 
 model Infrastructure {
-    id                Int     @id @default(autoincrement())
-    user              User    @relation(fields: [userId], references: [id])
+    id                Int      @id @default(autoincrement())
+    user              User     @relation(fields: [userId], references: [id])
     userId            Int
     description       String
     code              String
     status            String
     deploymentDetails String?  // JSON string containing deployment results or error details
+    createdAt         DateTime @default(now())
+    updatedAt         DateTime @updatedAt
 }
