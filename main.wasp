@@ -35,6 +35,18 @@ action validateAndDeployInfrastructure {
   entities: [Infrastructure]
 }
 
+action saveCloudCredentials {
+  fn: import { saveCloudCredentials } from "@src/credentialActions.js",
+}
+
+action deleteCloudCredentials {
+  fn: import { deleteCloudCredentials } from "@src/credentialActions.js",
+}
+
+action getUserCloudCredentials {
+  fn: import { getUserCloudCredentials } from "@src/credentialActions.js",
+}
+
 query getUserInfrastructures {
   fn: import { getUserInfrastructures } from "@src/queries.js",
   entities: [Infrastructure]
@@ -59,5 +71,11 @@ page DashboardPage {
 route InfrastructureDetailRoute { path: "/infrastructure/:infraId", to: InfrastructureDetailPage }
 page InfrastructureDetailPage {
   component: import InfrastructureDetailPage from "@src/pages/InfrastructureDetail.jsx",
+  authRequired: true
+}
+
+route CloudCredentialsRoute { path: "/credentials", to: CloudCredentialsPage }
+page CloudCredentialsPage {
+  component: import CloudCredentialsPage from "@src/pages/CloudCredentials.jsx",
   authRequired: true
 }
