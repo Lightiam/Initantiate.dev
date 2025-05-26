@@ -5,9 +5,6 @@
     "@aws-sdk/client-bedrock-runtime": "^3.816.0",
     "@azure/openai": "^1.0.0-beta.6",
     "@google-cloud/vertexai": "^1.10.0",
-    "@pulumi/aws": "^6.81.0",
-    "@pulumi/azure-native": "^3.5.0",
-    "@pulumi/gcp": "^8.32.1",
     "@pulumi/pulumi": "^3.171.0",
     "axios": "^1.4.0",
     "react": "^18.2.0",
@@ -17,6 +14,9 @@
     "wasp": "file:.wasp/out/sdk/wasp"
   },
   "devDependencies": {
+    "@pulumi/aws": "^6.81.0",
+    "@pulumi/azure-native": "^3.5.0",
+    "@pulumi/gcp": "^8.32.1",
     "@types/react": "^18.0.37",
     "prisma": "5.19.1",
     "typescript": "^5.1.0",

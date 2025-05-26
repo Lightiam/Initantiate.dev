@@ -37,3 +37,6 @@ yarn-error.log*
 
 # Sensitive information
 credentials/
+
+# Credential scripts
+scripts/integrate-credentials.*
